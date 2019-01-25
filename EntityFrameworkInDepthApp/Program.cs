@@ -11,6 +11,7 @@ namespace EntityFrameworkInDepthApp
         static void Main(string[] args)
         {
             //Hello World
+            Console.WriteLine(" ");
         }
     }
 }
