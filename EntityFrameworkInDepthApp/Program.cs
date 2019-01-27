@@ -20,6 +20,8 @@ namespace EntityFrameworkInDepthApp
     {
         static void Main(string[] args)
         {
+            PlutoContext ctx = new PlutoContext();
+            ctx.Authors.FirstOrDefault();
         }
     }
 }
