@@ -55,6 +55,10 @@
     <Compile Include="Migrations\201901271259097_InitialMigration.Designer.cs">
       <DependentUpon>201901271259097_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901281637563_AttachedDatabaseSuccess.cs" />
+    <Compile Include="Migrations\201901281637563_AttachedDatabaseSuccess.Designer.cs">
+      <DependentUpon>201901281637563_AttachedDatabaseSuccess.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Course.cs" />
@@ -70,6 +74,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201901271259097_InitialMigration.resx">
       <DependentUpon>201901271259097_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901281637563_AttachedDatabaseSuccess.resx">
+      <DependentUpon>201901281637563_AttachedDatabaseSuccess.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -20,9 +20,8 @@ namespace EntityFrameworkInDepthApp
     {
         static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "../../App_Data"));
             PlutoContext ctx = new PlutoContext();
-            ctx.Authors.Add(new Author() { Name = "Yossi", Courses = new List<Course>() { new Course() { } } });
+            ctx.Authors.Add(new Author() { Name = "Yosssi", Courses = new List<Course>() { new Course() { } } });
             ctx.SaveChanges();
             ctx.Authors.FirstOrDefault();
         }
