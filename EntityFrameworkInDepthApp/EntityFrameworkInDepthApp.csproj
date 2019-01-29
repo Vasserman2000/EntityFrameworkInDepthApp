@@ -59,6 +59,10 @@
     <Compile Include="Migrations\201901281637563_AttachedDatabaseSuccess.Designer.cs">
       <DependentUpon>201901281637563_AttachedDatabaseSuccess.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901291018110_req-descript.cs" />
+    <Compile Include="Migrations\201901291018110_req-descript.Designer.cs">
+      <DependentUpon>201901291018110_req-descript.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Course.cs" />
@@ -77,6 +81,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901281637563_AttachedDatabaseSuccess.resx">
       <DependentUpon>201901281637563_AttachedDatabaseSuccess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901291018110_req-descript.resx">
+      <DependentUpon>201901291018110_req-descript.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

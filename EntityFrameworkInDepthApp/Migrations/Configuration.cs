@@ -29,7 +29,7 @@ namespace EntityFrameworkInDepthApp.Migrations
                     Name = "Kalanit Efrat",
                     Courses = new Collection<Course>()
                     {
-                        new Course() { Title = "Marketing Strategy" }
+                        new Course() { Title = "Marketing Strategy", Description = "..." }
                     }
                 },
                 new Author
@@ -37,7 +37,7 @@ namespace EntityFrameworkInDepthApp.Migrations
                     Name = "Erez Rozenblit",
                     Courses = new Collection<Course>()
                     {
-                        new Course() { Title = "Financial Accounting" }
+                        new Course() { Title = "Financial Accounting", Description = "..." }
                     }
                 }
                 );
