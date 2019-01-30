@@ -18,7 +18,16 @@ namespace EntityFrameworkInDepthApp
         {
             modelBuilder.Entity<Course>()
                 .Property(t => t.Description)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            modelBuilder.Entity<Course>()
+                .Property(t => t.Title)
                 .IsRequired();
+
+            modelBuilder.Entity<Course>()
+                .HasIndex(c => c.Title)
+                .IsUnique();
         }
     }
 
