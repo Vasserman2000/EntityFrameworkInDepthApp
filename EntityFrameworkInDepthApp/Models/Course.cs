@@ -13,5 +13,6 @@ namespace EntityFrameworkInDepthApp.Models
         public float FullPrice { get; set; }
         public Author Author { get; set; }
         public IList<Tag> Tags { get; set; }
+        public int AuthorId { get; set; }
     }
 }

@@ -25,9 +25,6 @@ namespace EntityFrameworkInDepthApp
                 .Property(t => t.Title)
                 .IsRequired();
 
-            modelBuilder.Entity<Course>()
-                .HasIndex(c => c.Title)
-                .IsUnique();
         }
     }
 
@@ -37,7 +34,7 @@ namespace EntityFrameworkInDepthApp
         static void Main(string[] args)
         {
             PlutoContext ctx = new PlutoContext();
-            ctx.Authors.Add(new Author() { Name = "Yosssi", Courses = new List<Course>() { new Course() { } } });
+            ctx.Authors.Add(new Author() { Name = "Yosssi", Courses = new List<Course>() { new Course() { Title = "a" } } });
             ctx.SaveChanges();
             ctx.Authors.FirstOrDefault();
         }

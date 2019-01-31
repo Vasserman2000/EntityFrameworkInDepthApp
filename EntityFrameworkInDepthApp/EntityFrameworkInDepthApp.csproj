@@ -63,6 +63,10 @@
     <Compile Include="Migrations\201901291018110_req-descript.Designer.cs">
       <DependentUpon>201901291018110_req-descript.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901311720036_seedingNewData.cs" />
+    <Compile Include="Migrations\201901311720036_seedingNewData.Designer.cs">
+      <DependentUpon>201901311720036_seedingNewData.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Course.cs" />
@@ -84,6 +88,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901291018110_req-descript.resx">
       <DependentUpon>201901291018110_req-descript.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901311720036_seedingNewData.resx">
+      <DependentUpon>201901311720036_seedingNewData.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
