@@ -34,9 +34,81 @@ namespace EntityFrameworkInDepthApp
         static void Main(string[] args)
         {
             PlutoContext ctx = new PlutoContext();
-            ctx.Authors.Add(new Author() { Name = "Yosssi", Courses = new List<Course>() { new Course() { Title = "a" } } });
-            ctx.SaveChanges();
-            ctx.Authors.FirstOrDefault();
+
+            //FirstExampleLinqVsExtensionMethod(ctx);
+
+            //Restrictions(ctx);
+
+            //Grouping(ctx);
+
+            Joining(ctx);
+                
+        }
+
+        static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
+        {
+            //LINQ Syntax:
+            var query =
+                from c in ctx.Courses
+                where c.Title.Contains("c#")
+                orderby c.Title
+                select c;
+
+            foreach (var c in query)
+                Console.WriteLine(c.Title);
+
+            //Extension methods:
+            var courses = ctx.Courses
+                .Where(c => c.Title.Contains("c#"))
+                .OrderBy(c => c.Title);
+
+            foreach (var course in courses)
+                Console.WriteLine(course.Title);
+        }
+
+        static void Restrictions (PlutoContext ctx)
+        {
+            var query =
+                from c in ctx.Courses
+                where c.Level == CourseLevel.Beginner && c.AuthorId == 1
+                select new { Name = c.Title, Id = c.Id };
+        }
+
+        static void Grouping (PlutoContext ctx)
+        {
+            var query =
+                from c in ctx.Courses
+                group c by c.Level
+                into g
+                select g;
+
+            foreach (var group in query)
+            {
+                Console.WriteLine(group.Key);
+
+                //display courses and next to it's level - print the number of courses in each group
+                Console.WriteLine($"{group.Count()}");
+
+                foreach (var course in group)
+                {
+                    //display courses of each group (grouped by course level)
+                    //Console.WriteLine("\t{0}", course.Title);
+                }
+            }
+        }
+
+        static void Joining (PlutoContext ctx)
+        {
+            // use navigation propertie
+            var query =
+                from c in ctx.Courses
+                select new { CourseName = c.Title, CourseAuthor = c.Author };
+
+            foreach (var c in query)
+            {
+                Console.WriteLine($"Course name: {c.CourseName.Substring(0, 9)} | course author: {c.CourseAuthor.Name}");
+
+            }
         }
     }
 }
