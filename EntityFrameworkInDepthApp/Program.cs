@@ -35,14 +35,16 @@ namespace EntityFrameworkInDepthApp
         {
             PlutoContext ctx = new PlutoContext();
 
+            // LINQ Syntax:
             //FirstExampleLinqVsExtensionMethod(ctx);
 
             //Restrictions(ctx);
 
             //Grouping(ctx);
 
-            Joining(ctx);
-                
+            //Joining(ctx);
+
+            // LINQ Extension Methods:
         }
 
         static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
@@ -66,7 +68,7 @@ namespace EntityFrameworkInDepthApp
                 Console.WriteLine(course.Title);
         }
 
-        static void Restrictions (PlutoContext ctx)
+        static void Restrictions(PlutoContext ctx)
         {
             var query =
                 from c in ctx.Courses
@@ -74,7 +76,7 @@ namespace EntityFrameworkInDepthApp
                 select new { Name = c.Title, Id = c.Id };
         }
 
-        static void Grouping (PlutoContext ctx)
+        static void Grouping(PlutoContext ctx)
         {
             var query =
                 from c in ctx.Courses
@@ -97,7 +99,7 @@ namespace EntityFrameworkInDepthApp
             }
         }
 
-        static void Joining (PlutoContext ctx)
+        static void Joining(PlutoContext ctx)
         {
             // use navigation propertie
             var query =
@@ -121,6 +123,33 @@ namespace EntityFrameworkInDepthApp
             {
                 Console.WriteLine($"Course name: { c.CourseName.Substring(0, 9) } | course author: { c.CourseAuthorName }");
             }
+
+            Console.WriteLine("-----------------------------------------------------------");
+
+            // group join (no equivalent in sql but useful when we do LEFT JOINs in sql)
+            var query2 =
+                from a in ctx.Authors
+                join c in ctx.Courses on a.Id equals c.AuthorId into g
+                select new { AuthorName = a.Name, Courses = g.Count() };
+
+            foreach (var x in query2)
+            {
+                Console.WriteLine($"{x.AuthorName} ({x.Courses})");
+            }
+
+            Console.WriteLine("-----------------------------------------------------------");
+
+            // cross join
+            var query3 =
+                from a in ctx.Authors
+                from c in ctx.Courses
+                select new { AuthorName = a.Name, CourseName = c.Title };
+
+            foreach (var i in query3)
+            {
+                Console.WriteLine($"{i.AuthorName} - {i.CourseName}");
+            }
+
         }
     }
 }
