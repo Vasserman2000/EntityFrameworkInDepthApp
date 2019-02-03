@@ -107,7 +107,19 @@ namespace EntityFrameworkInDepthApp
             foreach (var c in query)
             {
                 Console.WriteLine($"Course name: {c.CourseName.Substring(0, 9)} | course author: {c.CourseAuthor.Name}");
+            }
 
+            Console.WriteLine("-----------------------------------------------------------");
+
+            // use join
+            var query1 =
+                from c in ctx.Courses
+                join a in ctx.Authors on c.AuthorId equals a.Id
+                select new { CourseName = c.Title, CourseAuthorName = a.Name };
+
+            foreach (var c in query1)
+            {
+                Console.WriteLine($"Course name: { c.CourseName.Substring(0, 9) } | course author: { c.CourseAuthorName }");
             }
         }
     }
