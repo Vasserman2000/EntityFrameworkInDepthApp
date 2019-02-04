@@ -40,11 +40,12 @@ namespace EntityFrameworkInDepthApp
 
             //Restrictions(ctx);
 
+            Ordering(ctx);
+
             //Grouping(ctx);
 
             //Joining(ctx);
-
-            // LINQ Extension Methods:
+            
         }
 
         static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
@@ -74,6 +75,11 @@ namespace EntityFrameworkInDepthApp
                 from c in ctx.Courses
                 where c.Level == CourseLevel.Beginner && c.AuthorId == 1
                 select new { Name = c.Title, Id = c.Id };
+
+            // LINQ Extension Method:
+            // get all courses in level 'Beginner':
+            var courses = ctx.Courses.Where(c => c.Level == CourseLevel.Beginner);
+
         }
 
         static void Grouping(PlutoContext ctx)
@@ -150,6 +156,14 @@ namespace EntityFrameworkInDepthApp
                 Console.WriteLine($"{i.AuthorName} - {i.CourseName}");
             }
 
+        }
+
+        static void Ordering (PlutoContext ctx)
+        {
+            var courses = ctx.Courses
+                .Where(c => c.Level == CourseLevel.Beginner)
+                .OrderByDescending(c => c.Title)
+                .ThenByDescending(c => c.Level);
         }
     }
 }
