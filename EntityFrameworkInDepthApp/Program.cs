@@ -133,7 +133,7 @@ namespace EntityFrameworkInDepthApp
             Console.WriteLine("-----------------------------------------------------------");
             #endregion
 
-            #region JOIN (LINQ Syntax)
+            #region INNER JOIN (LINQ Syntax)
             var query1 =
                 from c in ctx.Courses
                 join a in ctx.Authors on c.AuthorId equals a.Id
@@ -176,7 +176,7 @@ namespace EntityFrameworkInDepthApp
             }
             #endregion
 
-            #region JOIN (LINQ Extension Method)
+            #region INNER JOIN (LINQ Extension Method)
             var joinResult = ctx.Courses.Join(ctx.Authors,
                 c => c.AuthorId,
                 a => a.Id,
@@ -185,6 +185,32 @@ namespace EntityFrameworkInDepthApp
                         CourseName = Course.Title,
                         AuthorName = Author.Name
                     });
+            #endregion
+
+            #region GROUP JOIN (LINQ Extension Method)
+            // useful when using for LEFT JOINS with AGGREGATE function
+
+            var groupJoinResult = ctx.Authors
+                .GroupJoin(ctx.Courses,
+                    a => a.Id, 
+                    c => c.AuthorId, 
+                    (author, courses) => 
+                        new {
+                            AuthorName = author,
+                            Courses = courses.Count()
+                            });
+            #endregion
+
+            #region CROSS JOIN (LINQ Extension Method)
+
+            var crossJoinResult = ctx.Authors
+                .SelectMany(
+                    a => ctx.Courses,  
+                    (author, course) => 
+                    new {
+                        AuthorName = author.Name,
+                        Course = course.Title
+                        });
             #endregion
         }
 
