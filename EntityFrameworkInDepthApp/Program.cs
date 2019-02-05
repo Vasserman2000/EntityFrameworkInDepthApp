@@ -34,18 +34,18 @@ namespace EntityFrameworkInDepthApp
         static void Main(string[] args)
         {
             PlutoContext ctx = new PlutoContext();
-
-            // LINQ Syntax:
+            
             //FirstExampleLinqVsExtensionMethod(ctx);
 
             //Restrictions(ctx);
 
-            Ordering(ctx);
+            //Ordering(ctx);
 
             //Grouping(ctx);
 
-            //Joining(ctx);
-            
+            Joining(ctx);
+
+            //Projection(ctx);
         }
 
         static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
@@ -84,6 +84,7 @@ namespace EntityFrameworkInDepthApp
 
         static void Grouping(PlutoContext ctx)
         {
+            // linq syntax:
             var query =
                 from c in ctx.Courses
                 group c by c.Level
@@ -103,11 +104,23 @@ namespace EntityFrameworkInDepthApp
                     //Console.WriteLine("\t{0}", course.Title);
                 }
             }
+
+            //linq ext. methods:
+            var groups = ctx.Courses.GroupBy(c => c.Level);
+
+            foreach (var g in groups)
+            {
+                Console.WriteLine("Key: " + g.Key);
+                foreach (var course in g)
+                {
+                    Console.WriteLine(course.Title);
+                }
+            }
         }
 
         static void Joining(PlutoContext ctx)
         {
-            // use navigation propertie
+            #region Navigation Property
             var query =
                 from c in ctx.Courses
                 select new { CourseName = c.Title, CourseAuthor = c.Author };
@@ -118,8 +131,9 @@ namespace EntityFrameworkInDepthApp
             }
 
             Console.WriteLine("-----------------------------------------------------------");
+            #endregion
 
-            // use join
+            #region JOIN (LINQ Syntax)
             var query1 =
                 from c in ctx.Courses
                 join a in ctx.Authors on c.AuthorId equals a.Id
@@ -131,6 +145,9 @@ namespace EntityFrameworkInDepthApp
             }
 
             Console.WriteLine("-----------------------------------------------------------");
+            #endregion
+
+            #region GROUP JOIN (LINQ Syntax)
 
             // group join (no equivalent in sql but useful when we do LEFT JOINs in sql)
             var query2 =
@@ -144,7 +161,9 @@ namespace EntityFrameworkInDepthApp
             }
 
             Console.WriteLine("-----------------------------------------------------------");
+            #endregion
 
+            #region CROSS JOIN (LINQ Syntax)
             // cross join
             var query3 =
                 from a in ctx.Authors
@@ -155,15 +174,53 @@ namespace EntityFrameworkInDepthApp
             {
                 Console.WriteLine($"{i.AuthorName} - {i.CourseName}");
             }
+            #endregion
 
+            #region JOIN (LINQ Extension Method)
+            var joinResult = ctx.Courses.Join(ctx.Authors,
+                c => c.AuthorId,
+                a => a.Id,
+                (Course, Author) => new
+                    {
+                        CourseName = Course.Title,
+                        AuthorName = Author.Name
+                    });
+            #endregion
         }
 
         static void Ordering (PlutoContext ctx)
         {
+            // using LINQ Extension methods:
             var courses = ctx.Courses
                 .Where(c => c.Level == CourseLevel.Beginner)
                 .OrderByDescending(c => c.Title)
                 .ThenByDescending(c => c.Level);
+        }
+
+        static void Projection (PlutoContext ctx)
+        {
+            // using LINQ Extension methods:
+            var courses = ctx.Courses
+                .Where(c => c.Level == CourseLevel.Beginner)
+                .OrderBy(c => c.Title)
+                .Select(c => new { CourseName = c.Title, AuthorName = c.Author.Name });
+
+            // list of lists
+            var courses1 = ctx.Courses
+                .Where(c => c.Level == CourseLevel.Beginner)
+                .OrderBy(c => c.Title)
+                .Select(c => c.Tags);
+
+            // list of tags
+            var tags = ctx.Courses
+                .Where(c => c.Level == CourseLevel.Beginner)
+                .OrderBy(c => c.Title)
+                .SelectMany(c => c.Tags).Distinct();
+
+            foreach (var tag in tags)
+            {
+                Console.WriteLine(tag.Name);
+            }
         }
     }
 }
