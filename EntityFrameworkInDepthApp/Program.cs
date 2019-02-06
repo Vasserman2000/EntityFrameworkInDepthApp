@@ -34,7 +34,7 @@ namespace EntityFrameworkInDepthApp
         static void Main(string[] args)
         {
             PlutoContext ctx = new PlutoContext();
-            
+
             //FirstExampleLinqVsExtensionMethod(ctx);
 
             //Restrictions(ctx);
@@ -43,9 +43,17 @@ namespace EntityFrameworkInDepthApp
 
             //Grouping(ctx);
 
-            Joining(ctx);
+            //Joining(ctx);
 
             //Projection(ctx);
+
+            //Partitioning(ctx);
+
+            //Operators(ctx);
+
+            //Quantifying(ctx);
+
+            //Aggregating(ctx);
         }
 
         static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
@@ -247,6 +255,59 @@ namespace EntityFrameworkInDepthApp
             {
                 Console.WriteLine(tag.Name);
             }
+        }
+
+        static void Partitioning (PlutoContext ctx)
+        {
+            #region Exists only in LINQ Extension Methods
+            // display courses in pages, the size of each page - 3
+            var courses = ctx.Courses
+                                .OrderBy(c => c.Id)
+                                .Skip(3)
+                                .Take(3);
+
+            foreach (var c in courses)
+            {
+                Console.WriteLine($"Course: {c.Title}");
+            }
+            #endregion
+        }
+
+        static void Operators(PlutoContext ctx)
+        {
+            #region Exists only in LINQ Extension Methods
+            ctx.Courses.OrderBy(c => c.Level).FirstOrDefault(c => c.FullPrice > 100);
+
+            // the "Last" method is not for use with sql database:
+            ctx.Courses.LastOrDefault();
+
+            ctx.Courses.SingleOrDefault(c => c.Id == 1);
+            #endregion
+        }
+
+        static void Quantifying(PlutoContext ctx)
+        {
+            #region Exists only in LINQ Extension Methods
+            // find if "all" items in a list satisfy a criteria:
+            bool allAbove10Dollars = ctx.Courses.All(c => c.FullPrice > 10);
+
+            // find if "any" item in a list satisfies a criteria:
+            bool anyCourseInBeginnerLevel = ctx.Courses.Any(c => c.Level == CourseLevel.Beginner);
+            #endregion
+        }
+
+        static void Aggregating(PlutoContext ctx)
+        {
+            #region Exists only in LINQ Extension Methods
+            var count = ctx.Courses.Where(c => c.Level == CourseLevel.Beginner).Count();
+
+            ctx.Courses.Max(c => c.FullPrice);
+
+            ctx.Courses.Min(c => c.FullPrice);
+
+            ctx.Courses.Average(c => c.FullPrice);
+
+            #endregion
         }
     }
 }
