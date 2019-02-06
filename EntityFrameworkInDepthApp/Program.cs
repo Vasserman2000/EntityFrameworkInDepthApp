@@ -54,6 +54,8 @@ namespace EntityFrameworkInDepthApp
             //Quantifying(ctx);
 
             //Aggregating(ctx);
+
+            IQueryableVsIEnumerable(ctx);
         }
 
         static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
@@ -308,6 +310,21 @@ namespace EntityFrameworkInDepthApp
             ctx.Courses.Average(c => c.FullPrice);
 
             #endregion
+        }
+
+        static void IQueryableVsIEnumerable(PlutoContext ctx)
+        {
+            // IQueryable allows queries to be ---extended--- without being immediately executed
+            // We are building here an expression tree: we [compose] queries, extend them and delay execution
+            IQueryable<Course> courses = ctx.Courses
+                            .Where(c => c.Level == CourseLevel.Beginner)
+                            .OrderByDescending(c => c.Id)
+                            .Select(c => c);
+            // When we use IEnumerable, we cannot extend (compose) a query so it executes at every step:
+            IEnumerable<Course> courses2 = ctx.Courses
+                            .Where(c => c.Level == CourseLevel.Beginner)
+                            .OrderByDescending(c => c.Id)
+                            .Select(c => c);
         }
     }
 }
