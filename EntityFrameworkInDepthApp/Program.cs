@@ -10,6 +10,12 @@ namespace EntityFrameworkInDepthApp
 {
     public class PlutoContext : DbContext
     {
+        public PlutoContext() : base()
+        {
+            // this way we can turn lazy loading off even if the navigational property defined as public virtual:
+            Configuration.LazyLoadingEnabled = false;
+        }
+
         public DbSet<Course> Courses { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<Tag> Tags { get; set; }
@@ -55,7 +61,9 @@ namespace EntityFrameworkInDepthApp
 
             //Aggregating(ctx);
 
-            IQueryableVsIEnumerable(ctx);
+            //IQueryableVsIEnumerable(ctx);
+
+            LazyLoading(ctx);
         }
 
         static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
@@ -325,6 +333,18 @@ namespace EntityFrameworkInDepthApp
                             .Where(c => c.Level == CourseLevel.Beginner)
                             .OrderByDescending(c => c.Id)
                             .Select(c => c);
+        }
+
+        static void LazyLoading(PlutoContext ctx)
+        {
+            // if a navigational property defined as public virtual then the EF will use LAZY LOADING
+            // so it will postpone executing the query for bringing the relational data so instead
+            // going once to the DB and bringing all related data it will go to the DB on demand only
+            // when we access them
+            // which will cause additional roundtrips to the DB
+            // use Single, First, MAX to immediately execute a query
+            // Use Lazy Loading to load main objects and load the related objects on demand
+            var courses = ctx.Courses.Single(c => c.Level == CourseLevel.Intermediate);
         }
     }
 }
