@@ -63,7 +63,9 @@ namespace EntityFrameworkInDepthApp
 
             //IQueryableVsIEnumerable(ctx);
 
-            LazyLoading(ctx);
+            //LazyLoading(ctx);
+
+            EagerLoading(ctx);
         }
 
         static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
@@ -345,6 +347,35 @@ namespace EntityFrameworkInDepthApp
             // use Single, First, MAX to immediately execute a query
             // Use Lazy Loading to load main objects and load the related objects on demand
             var courses = ctx.Courses.Single(c => c.Level == CourseLevel.Intermediate);
+        }
+
+        static void EagerLoading(PlutoContext ctx)
+        {
+            // the oposite of Lazy Loading
+            // instead of loading related entities on demand, we gonna loading them
+            // to prevent additional queries to the DB
+            // solving the 'N+1' issue
+
+            var courses = ctx.Courses.Include(c => c.Author).ToList();
+            foreach (var course in courses)
+            {
+                Console.WriteLine($"[{course.Title}] by [{course.Author.Name}]");
+            }
+
+            // for single properties
+            ctx.Courses.Include(c => c.Author); //ctx.Courses.Include(c => c.Author.Address);
+
+            // for collection properties
+            ctx.Courses.Include(c => c.Tags.Select(t => t.Courses));
+
+            // if using a lot of eager loading we will get complex sql query with many joins
+            // and so we will store in a memory a lot of data when we not neccessary need it
+            // so be careful with this:
+            //ctx.Courses
+            //     .Include(c => c.Author)
+            //     .Include(c => c.Tags.Select(t => t.Courses))
+            //     .Include(c => c.AuthorId)
+            //     .Include(c => c.Level);
         }
     }
 }
