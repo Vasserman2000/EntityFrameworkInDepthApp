@@ -65,7 +65,9 @@ namespace EntityFrameworkInDepthApp
 
             //LazyLoading(ctx);
 
-            EagerLoading(ctx);
+            //EagerLoading(ctx);
+
+            ExplicitLoading(ctx);
         }
 
         static void FirstExampleLinqVsExtensionMethod(PlutoContext ctx)
@@ -376,6 +378,41 @@ namespace EntityFrameworkInDepthApp
             //     .Include(c => c.Tags.Select(t => t.Courses))
             //     .Include(c => c.AuthorId)
             //     .Include(c => c.Level);
+        }
+
+        static void ExplicitLoading(PlutoContext ctx)
+        {
+            // we tell Entity Framework [exactly] what should be loaded
+            // no SQL joins
+            // separate queries, multiple round-trips to the DB
+            var author = ctx.Authors.Include(a => a.Courses).Single(a => a.Id == 1);
+
+            #region Explicit Loading
+            // MSDN way (works for single entries only)
+            //ctx.Entry(author).Collection(a => a.Courses).Load();
+
+            // Better way (second query that gets all courses for that author):
+            //ctx.Courses.Where(c => c.AuthorId == author.Id).Load();
+            #endregion
+
+            #region Explicit Loading (with filters)
+            // also we can apply a filter on the explcit loading:
+
+            // MSDN way:
+            //ctx.Entry(author).Collection(a => a.Courses).Query().Where(c => c.FullPrice == 0).Load();
+
+            // prefered way:
+            //ctx.Courses.Where(c => c.AuthorId == author.Id && c.FullPrice == 0).Load();
+            #endregion
+
+            #region Example: load only free courses by certain authors
+            var authors = ctx.Authors.ToList();
+
+            IEnumerable<int> authorIds = authors.Select(a => a.Id);
+
+            ctx.Courses.Where(c => authorIds.Contains(c.AuthorId) && c.FullPrice == 0).Load();
+            #endregion
+
         }
     }
 }
